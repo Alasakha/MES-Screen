@@ -21,7 +21,10 @@ const drawMonthlyIndicators = () => {
     },
     legend: {
       top: '5%',
-      left: 'center'
+      left: 'center',
+      textStyle: {
+            color: '#fff' // 设置图例字体颜色为白色
+        }
     },
     series: [
       {

@@ -23,7 +23,7 @@
 import { ref, onMounted } from 'vue';
 
 import DataCard from "@/components/DataCard.vue"; // 导入封装组件
-
+import { getProduceInfo } from '@/api/getProduceinfo';
 // 定义数据
 const peopleCount = ref(50);  // 人数
 const efficiency = ref(85);   // 效率（%）
@@ -34,6 +34,7 @@ const inProduction = ref(90);
 const pendingToday = ref(60);
 const completionRate = ref(95);  // 产量达成率（%）
 onMounted(() => {
+  console.log(getProduceInfo())
   // 模拟数据更新（可接后端接口）
   setTimeout(() => {
     peopleCount.value = 55;

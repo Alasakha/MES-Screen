@@ -13,7 +13,7 @@ import * as echarts from 'echarts';
 
 const monthlyIndicators = ref(null);
 
-const drawMonthlyIndicators = () => {
+const drawMonthlyIndicators2 = () => {
   const monthlyIndicatorsElement = echarts.init(monthlyIndicators.value);
   const option = {
     tooltip: {
@@ -21,7 +21,10 @@ const drawMonthlyIndicators = () => {
     },
     legend: {
       top: '5%',
-      left: 'center'
+      left: 'center',
+      textStyle: {
+            color: '#fff' // 设置图例字体颜色为白色
+        }
     },
     series: [
       {
@@ -63,7 +66,7 @@ const drawMonthlyIndicators = () => {
 
 // 在组件挂载时绘制图表
 onMounted(() => {
-  drawMonthlyIndicators();
+  drawMonthlyIndicators2();
 });
 </script>
 
