@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@dataview/datav-vue3": "^0.0.0-test.1672506674342",
+    "@jiaminghi/data-view": "^2.10.0",
     "@kjgl77/datav-vue3": "^1.7.4",
     "axios": "^1.8.2",
     "echarts": "^5.6.0",

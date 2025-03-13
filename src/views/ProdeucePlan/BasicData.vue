@@ -3,15 +3,33 @@
     <div class="content">
       <div class="production-data">
         <div class="row">
-          <DataCard title="人时效率" :value="efficiency" unit="%" />
-          <DataCard title="本月已完成数" :value="completedThisMonth" />
-          <DataCard title="本月待生产数" :value="pendingThisMonth" />
-          <DataCard title="今日总排产" :value="totalPlannedToday" />
+          <!-- <DataCard title="人时效率" :value="efficiency" unit="%" /> -->
+          <!-- <DataCard title="本月已完成数" :value="completedThisMonth" /> -->
+          <DataCard 
+        title="自定义尺寸" 
+        :value="value" 
+        width="200px" 
+        height="150px"
+      />
+      <DataCard 
+        title="自定义尺寸" 
+        :value="value" 
+        width="200px" 
+        height="100px"
+      />
+      <DataCard 
+        title="自定义尺寸" 
+        :value="value" 
+        width="200px" 
+        height="150px"
+      />
+          <!-- <DataCard title="本月待生产数" :value="pendingThisMonth" />
+          <DataCard title="今日总排产" :value="totalPlannedToday" /> -->
         </div>
         <div class="row">
-          <DataCard title="进入已生产" :value="completedThisMonth" />
+          <!-- <DataCard title="进入已生产" :value="completedThisMonth" />
           <DataCard title="今日待生产" :value="pendingThisMonth" />
-          <DataCard title="今日产量达成率" :value="totalPlannedToday" />
+          <DataCard title="今日产量达成率" :value="totalPlannedToday" /> -->
         </div>
       </div>
     </div>
@@ -57,8 +75,7 @@ onMounted(() => {
 .content {
   display: flex;
   justify-content: space-between;
-  margin-top: 4vh; 
-
+  margin-top: 2vh; 
 }
 
 .humaneffic {
@@ -88,7 +105,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-around; /* 让内容分散一点 */
   /* gap: 30px; 增大间距 */
-  margin-bottom: 50px; /* 让两行之间间隔更大 */
+  margin-bottom: 2vh; /* 让两行之间间隔更大 */
 }
 
 .title{

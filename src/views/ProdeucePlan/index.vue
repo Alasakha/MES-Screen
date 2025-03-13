@@ -1,5 +1,5 @@
 <script setup>
-import Band from '../views/Band.vue'
+import Band from './Band.vue'
 
 </script>
 

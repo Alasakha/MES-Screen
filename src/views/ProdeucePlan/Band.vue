@@ -35,15 +35,13 @@
 </template>
 
 <script setup>
-
-
 import CurrentTime from './CurrentTime.vue';
 import ProjectSum from './ProjectSum.vue';
 import WorkProgress from './WorkProgress.vue';
 import BasicData from './BasicData.vue';
-import CapacityBarchart from './Picture/CapacityBarchart.vue'
-import ProduceAbnormalPiecharts from './Picture/ProduceAbnormalPiecharts.vue'
-import DayilyAbBarchart from './Picture/DayilyAbBarchart.vue'
+import CapacityBarchart from './Charts/CapacityBarchart.vue'
+import ProduceAbnormalPiecharts from './Charts/ProduceAbnormalPiecharts.vue'
+import DayilyAbBarchart from './Charts/DayilyAbBarchart.vue'
 
 
 </script>
@@ -83,7 +81,6 @@ import DayilyAbBarchart from './Picture/DayilyAbBarchart.vue'
   height: 30vh;
   width: 20vw;
 }
-
 
 .chart-container {
   margin-top: 20px; /* 设置图表与其他元素的间距 */
