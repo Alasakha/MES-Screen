@@ -1,14 +1,29 @@
 <template>
   <div class="container">
     <div class="title title-main">生产计划管理看板</div>
-    <div class="title">本月生产计划总数：{{ ProjectSum }}</div>
+    <div class="title">本月生产计划总数：{{ MonthlyData.plan }}</div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref ,onMounted} from 'vue';
+import { useRoute } from 'vue-router';
+import { getMonthTotalInfo } from '@/api/getProduceinfo';
 
-const ProjectSum = ref(2123);
+const route = useRoute();
+const prodLine = route.query.prodLine; // 通过 query 获取参数
+const MonthlyData = ref({});  // 确保它是一个对象
+
+
+
+const fetchData = () => {
+  getMonthTotalInfo(prodLine).then(res => {
+    MonthlyData.value = res.data
+  })
+}
+onMounted(() => {
+  fetchData();
+})
 </script>
 
 <style scoped>

@@ -3,33 +3,16 @@
     <div class="content">
       <div class="production-data">
         <div class="row">
-          <!-- <DataCard title="人时效率" :value="efficiency" unit="%" /> -->
-          <!-- <DataCard title="本月已完成数" :value="completedThisMonth" /> -->
-          <DataCard 
-        title="自定义尺寸" 
-        :value="value" 
-        width="200px" 
-        height="150px"
-      />
-      <DataCard 
-        title="自定义尺寸" 
-        :value="value" 
-        width="200px" 
-        height="100px"
-      />
-      <DataCard 
-        title="自定义尺寸" 
-        :value="value" 
-        width="200px" 
-        height="150px"
-      />
-          <!-- <DataCard title="本月待生产数" :value="pendingThisMonth" />
-          <DataCard title="今日总排产" :value="totalPlannedToday" /> -->
+          <DataCard title="人时效率" :value="11" unit="%" />
+          <DataCard title="本月已完成数" :value="MonthlyData?.done || '无数据'" /> 
+          <DataCard title="本月待生产数" :value="MonthlyData?.incomplete || '无数据'" />
+          
         </div>
         <div class="row">
-          <!-- <DataCard title="进入已生产" :value="completedThisMonth" />
-          <DataCard title="今日待生产" :value="pendingThisMonth" />
-          <DataCard title="今日产量达成率" :value="totalPlannedToday" /> -->
+          <DataCard title="今日总排产" :value="TodayData?.pcTotal || '无数据'" /> 
+          <DataCard title="今日生产中" :value="TodayData?.inProduce || '无数据'" />
+          <DataCard title="今日待生产" :value="TodayData?.unProduce || '无数据'" />
+          <DataCard title="今日产量达成率" :value="TodayData?.rate || '无数据'" />
         </div>
       </div>
     </div>
@@ -41,23 +24,31 @@
 import { ref, onMounted } from 'vue';
 
 import DataCard from "@/components/DataCard.vue"; // 导入封装组件
-import { getProduceInfo } from '@/api/getProduceinfo';
+import { getMonthTotalInfo ,getTodayProductionInfo} from '@/api/getProduceinfo';
+import { useRoute } from 'vue-router';
+
 // 定义数据
-const peopleCount = ref(50);  // 人数
-const efficiency = ref(85);   // 效率（%）
-const completedThisMonth = ref(1200);
-const pendingThisMonth = ref(300);
-const totalPlannedToday = ref(150);
-const inProduction = ref(90);
-const pendingToday = ref(60);
-const completionRate = ref(95);  // 产量达成率（%）
+const MonthlyData = ref()
+const TodayData = ref()
+const route = useRoute();
+const prodLine = route.query.prodLine; // 通过 query 获取参数
+
+const fetchData = () => {
+  getMonthTotalInfo(prodLine).then(res => {
+    console.log(res.data);
+    MonthlyData.value = res.data
+  }),
+  getTodayProductionInfo(prodLine).then(res => {
+    console.log(res.data);
+    TodayData.value = res.data
+  })
+}
+
 onMounted(() => {
-  console.log(getProduceInfo())
   // 模拟数据更新（可接后端接口）
-  setTimeout(() => {
-    peopleCount.value = 55;
-    efficiency.value = 88;
-  }, 2000);
+
+    fetchData();
+
 });
 </script>
 
@@ -75,7 +66,8 @@ onMounted(() => {
 .content {
   display: flex;
   justify-content: space-between;
-  margin-top: 2vh; 
+  height: 90%;
+  margin-top: 2vh;
 }
 
 .humaneffic {
@@ -104,8 +96,9 @@ onMounted(() => {
 .row {
   display: flex;
   justify-content: space-around; /* 让内容分散一点 */
+  height: 60%;
   /* gap: 30px; 增大间距 */
-  margin-bottom: 2vh; /* 让两行之间间隔更大 */
+  /* margin-bottom: 2vh; 让两行之间间隔更大 */
 }
 
 .title{

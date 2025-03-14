@@ -1,4 +1,5 @@
 <template>
+      <div style="display:flex;" >
         <!-- 小图表的外边框组件 -->
         <dv-border-box-1 class="box1">
         <!-- 显示当前年月日 -->
@@ -7,6 +8,10 @@
         <p class="currentTime">时间：{{ currentTime }}</p>
 
       </dv-border-box-1>
+
+  
+        <img src="@/assets/APOLLO.png" alt="">
+      </div>
 </template>
 
 <script setup>
@@ -50,5 +55,10 @@ onBeforeUnmount(() => {
 .currentTime{
   font-size: 20px;
   color: aliceblue;
+}
+img{
+  margin-left: 1vw;
+  width: 300px;
+  height: 100px;
 }
 </style>

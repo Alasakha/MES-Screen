@@ -24,8 +24,8 @@
       <!-- //表格区域 -->
       <div class="picture">
         <CapacityBarchart></CapacityBarchart>
-        <ProduceAbnormalPiecharts></ProduceAbnormalPiecharts>
-        <DayilyAbBarchart></DayilyAbBarchart>
+        <DailyAbnormalPiecharts></DailyAbnormalPiecharts>
+        <MonthAbnormalBarchart></MonthAbnormalBarchart>
       </div>
       
       
@@ -40,8 +40,8 @@ import ProjectSum from './ProjectSum.vue';
 import WorkProgress from './WorkProgress.vue';
 import BasicData from './BasicData.vue';
 import CapacityBarchart from './Charts/CapacityBarchart.vue'
-import ProduceAbnormalPiecharts from './Charts/ProduceAbnormalPiecharts.vue'
-import DayilyAbBarchart from './Charts/DayilyAbBarchart.vue'
+import DailyAbnormalPiecharts from './Charts/DailyAbnormal.vue'
+import MonthAbnormalBarchart from './Charts/MonthAbnormal.vue'
 
 
 </script>

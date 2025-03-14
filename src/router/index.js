@@ -8,7 +8,7 @@ import Quality from '../views/quality/index.vue'
 
 // 路由配置
 const routes = [
-  { path: '/', component: ProduceProject },  // 默认首页
+  { path: '/project', component: ProduceProject },// 开启 props 传参},  // 默认首页
   { path: '/quality', component: Quality }
 ];
 
