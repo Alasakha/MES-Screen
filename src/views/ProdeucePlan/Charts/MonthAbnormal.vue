@@ -22,11 +22,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted ,nextTick} from 'vue';
+import { ref, onMounted ,nextTick,onBeforeUnmount} from 'vue';
 import * as echarts from 'echarts';
 import { getabnormalProductionMonthInfo } from '@/api/getProduceinfo';
 import { useRoute } from 'vue-router';
 import { formatPieChartData } from '@/utils/Data/map';
+import { eventBus } from '@/utils/Data/eventBus';
+
 
 const route = useRoute();
 const prodLine = route.query.prodLine; // 通过 query 获取参数
@@ -82,39 +84,46 @@ const drawMonthlyIndicators = (formattedData) => {
 };
 
 const processData = (data) => {
-  console.log("原始数据:", data);
+
   const formattedData = formatPieChartData(data, 'guZhangTypeName', 'guZhangTypeCount');
-  console.log("格式化后的数据:", formattedData);
 
   if (formattedData.length === 0) {
-    console.log("数据为空，设置 isDataEmpty 为 true");
+
     isDataEmpty.value = true;  // 如果没有数据，设置为空数据状态
   } else {
-    console.log("数据不为空，绘制图表");
+
     isDataEmpty.value = false;
     console.log(isDataEmpty.value);
     
     // 确保 DOM 更新后再执行 ECharts 初始化
     nextTick(() => {
-      console.log("DOM 更新完成，开始绘制图表");
+
       drawMonthlyIndicators(formattedData);
     });
   }
 };
-
-// 在组件挂载时绘制图表
-onMounted(() => {
-  getabnormalProductionMonthInfo(prodLine)
+const fetchData = () => {
+    getabnormalProductionMonthInfo(prodLine)
     .then(res => {
       isLoading.value = false;   // 加载完成，关闭 loading 状态
       processData(res.data);  // 处理数据
-      console.log(isDataEmpty.value);
     })
     .catch(() => {
       isLoading.value = false;
       isDataEmpty.value = true;  // 如果请求失败，设置为空数据状态
     });
+}
+// 在组件挂载时启动定时获取数据
+onMounted(() => {
+  fetchData(); // 组件挂载时先请求一次
+  eventBus.on("refreshData", fetchData); // 监听全局刷新事件
 });
+
+
+  // 清理定时器，避免组件卸载后定时器继续执行
+  onBeforeUnmount(() => {
+    eventBus.off("refreshData", fetchData); // 组件销毁时取消监听
+  });
 </script>
 
 <style scoped>
@@ -149,8 +158,11 @@ h2 {
 }
 
 .wrapper div {
-  width: 90%;
-  height: 90%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* 加载中的样式 */
@@ -163,11 +175,15 @@ h2 {
 }
 
 /* 数据为空的提示样式 */
-.empty-container {
-  color: #fff;
-  font-size: 16px;
-  text-align: center;
+  .empty-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  font-size: 40px;
 }
+
 
 
 </style>

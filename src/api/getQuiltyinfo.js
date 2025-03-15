@@ -17,3 +17,11 @@ export const getcumulativePassRate = (prodLine) => {
     params: { prodLine } // 传递 prodLine 参数
   })
 }
+// 产品合格率排行
+export const getProductPassRateRank = (prodLine) => {
+  return request({
+    url: '/quality/passRanking',
+    method: 'get',
+    params: { prodLine } // 传递 prodLine 参数
+  })
+}

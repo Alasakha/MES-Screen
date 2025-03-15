@@ -32,3 +32,19 @@ export const getTodayProductionInfo = (prodLine) => {
     params: { prodLine } // 传递 prodLine 参数
   })
 }
+export const getColumnarHourInfo = (prodLine) => {
+  return request({
+    url: '/production/columnarHour',
+    method: 'get',
+    params: { prodLine } // 传递 prodLine 参数
+  })
+}
+
+// 5.	今日工单进度
+export const getTodayOrderProgressInfo = (prodLine) => {
+  return request({
+    url: '/production/workOrderProgress',
+    method: 'get',
+    params: { prodLine } // 传递 prodLine 参数
+  })
+}

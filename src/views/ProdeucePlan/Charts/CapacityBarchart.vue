@@ -1,124 +1,186 @@
 <template>
   
   <dv-border-box-9 class="box1">
-    <h2>当日小时产能柱状图</h2> 
-    <div class="position">
-       
-      <div ref="monthlyIndicators" style="width: 500px; height: 400px;"></div>
-    </div>
+    <div class="wrapper">
+     <h2>当日小时产能柱状图</h2>
+     
+     <!-- 如果正在加载，显示 loading -->
+     <div v-if="isLoading" class="loading-container">
+       <dv-loading>Loading...</dv-loading>
+     </div>
+     
+     <!-- 如果没有数据，显示暂无数据 -->
+     <div v-if="!isLoading && isDataEmpty" class="empty-container">
+       暂无数据
+     </div>
+     
+     <!-- 数据加载完成且非空时显示图表 -->
+      <div v-if="!isLoading && !isDataEmpty" ref="monthlyIndicators" ></div>
 
+    </div>
   </dv-border-box-9>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch, nextTick ,onBeforeUnmount} from 'vue';
 import * as echarts from 'echarts';
+import { getColumnarHourInfo } from '@/api/getProduceinfo';
+import { useRoute } from 'vue-router';
+import { eventBus } from '../../../utils/Data/eventBus';
 
+const route = useRoute();
+const prodLine = route.query.prodLine;
 const monthlyIndicators = ref(null);
+const isLoading = ref(true);
+const isDataEmpty = ref(false);
+const categories = ref([]); // X 轴数据
+const values = ref([]); // Y 轴数据
+let chartInstance = null;
 
-// 绘制柱状图
-const drawMonthlyIndicators = () => {
-  const monthlyIndicatorsElement = echarts.init(monthlyIndicators.value);
+// 处理数据
+const processData = (data) => {
+
+  console.log(data);
+console.log(Object.keys(data).length)
+  if (Object.keys(data).length === 0) { // 修正数据为空的判断
+    isDataEmpty.value = true;
+  } else {
+    isDataEmpty.value = false;
+    categories.value = Object.keys(data); // X 轴
+    values.value = Object.values(data);  // Y 轴
+  }
+};
+
+// 初始化 ECharts
+const drawhourlyIndicators = () => {
+  if (!monthlyIndicators.value) return;
+  chartInstance = echarts.init(monthlyIndicators.value);
+  updateChart();
+};
+
+// 更新 ECharts 数据
+const updateChart = () => {
+  if (!chartInstance) return;
+
   const option = {
-    legend: {
-      data: ['计划', '实际'],
-      icon: 'circle', // 设置图例图标为圆形
-      left: 'left', // 将图例定位到左侧
-      top: 'top', // 将图例定位到顶部
-    },
-    grid: {
-      top: '45', // 距离容器上边界的距离
-      right: '10', // 距离容器右边界的距离
-      bottom: '3', // 距离容器下边界的距离
-      left: '10', // 距离容器左边界的距离
-      containLabel: true, // 包含标签的绘图区域
-    },
     xAxis: {
       type: 'category',
-      data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-      axisTick: {
-        alignWithLabel: true,
-      },
-      axisLine: {
-        show: false, // 不显示横坐标轴线
-      },
-      axisTick: {
-        show: false, // 不显示刻度线
-      },
+      data: categories.value,
+      axisLabel: {
+        interval: 0, // 显示所有标签
+        color:'#fff',
+        fontSize: 12,
+      }
     },
     yAxis: {
       type: 'value',
-      boundaryGap: [0, 0.01],
+      axisLabel: {
+        color:'#fff',
+        fontSize: 15,
+      },
+      lineStyle: {
+      color: '#33ccff', // 设置横线颜色（红色）
+      width: 10, // 线条宽度
+      type: 'dashed' // 线条样式：'solid'（实线）, 'dashed'（虚线）, 'dotted'（点线）
+    }
     },
     series: [
       {
-        name: '实际',
-        data: [220, 182, 191, 234, 290, 330, 310, 123, 442, 321, 234, 123],
+        data: values.value,
         type: 'bar',
-        stack: 'total', // 添加堆积效果
-        barWidth: '30%', // 调整柱子宽度
         itemStyle: {
-          borderRadius: [5, 5, 0, 0], // 只有顶部圆角
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            // 设置渐变色
-            { offset: 0, color: '#bdd1f6' },
-            { offset: 1, color: '#4282ff' },
-          ]),
-        },
-      },
-      {
-        name: '计划',
-        data: [320, 132, 101, 134, 90, 230, 210, 320, 132, 101, 134, 90],
-        type: 'bar',
-        stack: 'total', // 添加堆积效果
-        barWidth: '30%', // 调整柱子宽度
-        itemStyle: {
-          borderRadius: [5, 5, 0, 0], // 只有顶部圆角
-          color: '#ebf2ff', // 设置柱子颜色
-        },
-      },
-    ],
+      color: '#3498db', // 修改柱子颜色
+    }
+      }
+    ]
   };
 
-  monthlyIndicatorsElement.setOption(option);
+  chartInstance.setOption(option);
 };
 
-// 在组件挂载时绘制图表
+const fetchData = () => {
+  getColumnarHourInfo(prodLine)
+    .then(res => {
+      isLoading.value = false;
+      processData(res.data);
+      nextTick(() => drawhourlyIndicators());
+    })
+    .catch(() => {
+      isLoading.value = false;
+      isDataEmpty.value = true;
+    });
+}
+
+// 在组件挂载时启动定时获取数据
 onMounted(() => {
-  drawMonthlyIndicators();
+  fetchData(); // 组件挂载时先请求一次
+  eventBus.on("refreshData", fetchData); // 监听全局刷新事件
 });
+
+  // 清理定时器，避免组件卸载后定时器继续执行
+  onBeforeUnmount(() => {
+    eventBus.off("refreshData", fetchData); // 组件销毁时取消监听
+  });
 </script>
+
 
 <style scoped>
 .box1 {
-  position: relative; /* 让子元素可以相对这个容器定位 */
-  width: 30vw;
-  height: 26vw;
+  position: relative;
+  width: 40%;
+  height: 24vw;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 18px;
   color: aliceblue;
+  padding: 20px;
 }
 
 h2 {
   position: absolute;
   top: 10px;
-  left: 20px;
+  left: 15px;
   margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
-.position {
+.wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.wrapper div {
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 20vh; /* 增加最小高度 */
 }
 
-.position div {
-  width: 90%; /* 适当调整宽度 */
-  height: 90%; /* 适当调整高度 */
+/* 加载中的样式 */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 16px;
 }
 
+/* 数据为空的提示样式 */
+.empty-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  font-size: 40px;
+}
 </style>

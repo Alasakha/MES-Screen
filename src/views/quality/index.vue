@@ -71,17 +71,16 @@ import Charts from './views/charts/index.vue'
 
 /* 上方时间和标题行 */
 .top-row {
-  height: 120px;
+  height: 10vh;
   display: flex;
-  gap: 20px;
 }
 
 .time-section {
-  width: 300px;
+  flex:1;
 }
 
 .title-section {
-  flex: 1;
+  flex: 3;
   display: flex;
   justify-content: center;
   align-items: center;

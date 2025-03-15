@@ -1,16 +1,24 @@
 <script setup>
 import { onMounted, onUnmounted } from 'vue'
 import { screenAdapter } from './utils/screen'
+import { eventBus } from './utils/Data/eventBus'
 
+let intervalId = null;
 // 组件挂载时初始化屏幕适配
 onMounted(() => {
   screenAdapter()
+  intervalId = setInterval(() => {
+    console.log("触发全局更新事件");
+    eventBus.emit("refreshData"); // 每分钟触发一次
+  }, 180000);
 })
 
 // 组件卸载时移除事件监听
 onUnmounted(() => {
   window.removeEventListener('resize', screenAdapter)
+  clearInterval(intervalId);
 })
+
 </script>
 
 <template>
