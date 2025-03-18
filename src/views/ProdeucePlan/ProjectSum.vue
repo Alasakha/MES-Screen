@@ -44,14 +44,14 @@ onMounted(() => {
 }
 
 .title {
-  margin-bottom: 10px; /* 控制行与行之间的间距 */
-  font-size: 20px;
+  margin-bottom: 1vh; /* 控制行与行之间的间距 */
+  font-size: 1.5vw;
   color: white;
 }
 
 .title-main {
-  font-size: 50px; /* 设置标题行的字体更大 */
+  font-size:3vw; /* 设置标题行的字体更大 */
   font-weight: bold; /* 设置标题为加粗 */
-  letter-spacing: 10px; /* 增加字间距 */
+  letter-spacing: 0.5vw; /* 增加字间距 */
 }
 </style>

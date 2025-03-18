@@ -1,6 +1,5 @@
 <template>
   <dv-border-box-1 class="box1">
-    <div class="content">
       <div class="production-data">
         <div class="row">
           <DataCard title="人时效率" :value="11" unit="%" />
@@ -8,14 +7,13 @@
           <DataCard title="本月待生产数" :value="MonthlyData?.incomplete || '无数据'" />
           
         </div>
-        <div class="row">
+        <div class="row" >
           <DataCard title="今日总排产" :value="TodayData?.pcTotal || '无数据'" /> 
           <DataCard title="今日生产中" :value="TodayData?.inProduce || '无数据'" />
           <DataCard title="今日待生产" :value="TodayData?.unProduce || '无数据'" />
           <DataCard title="今日产量达成率" :value="TodayData?.rate || '无数据'" />
         </div>
       </div>
-    </div>
   </dv-border-box-1>
 </template>
 
@@ -56,56 +54,34 @@ onMounted(() => {
   });
 </script>
 
-
 <style scoped>
 .box1 {
   width: 70vw;
-  height: 20vw;
+  height: 45vh;
   display: flex;
   flex-wrap: wrap;
-  font-size: 18px;
   color: aliceblue;
+  margin-top: 1vh;
 }
 
-.content {
-  display: flex;
-  justify-content: space-between;
-  height: 90%;
-  margin-top: 2vh;
-}
 
-.humaneffic {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 20%;
-  font-size: 20px;
-}
 
-.number {
-  margin-top: 5px;
-  font-size: 16px;
-  color: #ffdd57;
-}
 
 .production-data {
+  margin-top: 0.5vh;
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-content: space-around;
-  font-size: 30px;
-  padding: 10px 0; /* 上下增加一些 padding */
+  justify-content: space-between; /* 让子元素（两行）在父容器内均匀分布 */
+  height: 100%; /* 关键：确保有高度，子元素才能占据空间 */
 }
 
 .row {
   display: flex;
-  justify-content: space-around; /* 让内容分散一点 */
-  height: 60%;
-  /* gap: 30px; 增大间距 */
-  /* margin-bottom: 2vh; 让两行之间间隔更大 */
+  justify-content: space-around;
+  flex: 1; /* 关键：让两行平均占满父容器 */
+  align-items: center; /* 可选：让 DataCard 组件在行内垂直居中 */
 }
 
-.title{
-  font-size: 30px;
-}
+
 </style>

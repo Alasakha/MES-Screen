@@ -1,29 +1,36 @@
 <script setup>
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, nextTick } from 'vue'
 import { screenAdapter } from './utils/screen'
 import { eventBus } from './utils/Data/eventBus'
 
 let intervalId = null;
-let removeScreenListener = null; // 用于存储 screenAdapter 返回的清理函数
+let removeScreenListener = null; // 存储 `screenAdapter` 返回的清理函数
 
-onMounted(() => {
-  // 初始化屏幕适配，并获取返回的清理函数
-  removeScreenListener = screenAdapter();
+onMounted(async () => {
+  await nextTick(); // 确保 `#app` 已经挂载
+  removeScreenListener = screenAdapter(); // 启动适配监听
 
-  // 每 3 分钟触发一次全局刷新事件
-  intervalId = setInterval(() => {
-    console.log("触发全局更新事件");
-    eventBus.emit("refreshData");
-  }, 180000);
-})
+  // 避免 `intervalId` 被多次创建
+  if (!intervalId) {
+    intervalId = setInterval(() => {
+      console.log("🔄 触发全局更新事件");
+      eventBus.emit("refreshData");
+    }, 180000);
+  }
+});
 
 onUnmounted(() => {
-  // 调用 screenAdapter 返回的清理函数，正确移除监听
+  // 移除 `resize` 监听
   if (removeScreenListener) {
     removeScreenListener();
   }
-  clearInterval(intervalId);
-})
+
+  // 清除定时器
+  if (intervalId) {
+    clearInterval(intervalId);
+    intervalId = null;
+  }
+});
 </script>
 
 <template>
@@ -33,6 +40,7 @@ onUnmounted(() => {
 </template>
 
 <style>
+/* 全屏基础样式 */
 html, body {
   margin: 0;
   padding: 0;
@@ -41,31 +49,33 @@ html, body {
   overflow: hidden;
 }
 
+/* 屏幕居中适配 */
 .screen-container {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
+/* 缩放适配 */
 #app {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   background: 
     linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), 
     url('./assets/background.jpg') no-repeat center center;
   background-size: cover;
   transform-origin: center center;
   position: relative;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease-in-out;
 }
 
-/* 全局样式 */
+/* 隐藏滚动条 */
 ::-webkit-scrollbar {
   width: 0;
   height: 0;

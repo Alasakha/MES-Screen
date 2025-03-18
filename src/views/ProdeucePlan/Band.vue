@@ -2,7 +2,7 @@
   <ProjectSum class="title"></ProjectSum>
   <!-- 顶部导航 -->
   <dv-full-screen-container class="box">
-    <dv-border-box-11 title="生产计划管理看板">
+    <dv-border-box-11 title="生产计划管理看板" :titleWidth=350 >
       <!-- 第一行 -->
       <div class="line1">
         <!-- 第一行左边框框 -->
@@ -10,9 +10,9 @@
           <!-- 当前时间 -->
           <CurrentTime></CurrentTime>
           <!-- 基本信息 -->
-          <div class="basicdata">
+
             <BasicData></BasicData>
-          </div>
+
         </div>
           
         <div class="flex-item-right long-item">
@@ -28,8 +28,6 @@
         <MonthAbnormalBarchart></MonthAbnormalBarchart>
       </div>
       
-      
-
     </dv-border-box-11>
   </dv-full-screen-container>
 </template>
@@ -42,8 +40,6 @@ import BasicData from './BasicData.vue';
 import CapacityBarchart from './Charts/CapacityBarchart.vue'
 import DailyAbnormalPiecharts from './Charts/DailyAbnormal.vue'
 import MonthAbnormalBarchart from './Charts/MonthAbnormal.vue'
-
-
 </script>
 
 <style scoped>
@@ -54,17 +50,12 @@ import MonthAbnormalBarchart from './Charts/MonthAbnormal.vue'
   height: 50vh;
 }
 
-.flex-item-left, .flex-item-right {
-  height: 20vh;
-  margin: 5vh 10px; /* 可选，设置组件之间的间距 */
-}
-
 .title {
   position: absolute;
-  top: 5vh;
+  top: 2vh;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 24px;
+  font-size: 50px;
   font-weight: bold;
 }
 
@@ -72,14 +63,15 @@ import MonthAbnormalBarchart from './Charts/MonthAbnormal.vue'
   display: flex;
   flex-direction: column;
   justify-content: start;
-  height: 50vh;
-  margin: 5vh 10px;
+  height: 42vh;
+  margin: 3vh 0.5vw; /* 可选，设置组件之间的间距 */
 }
 
 .long-item {
-  margin-right: 15vw;
+  margin-right: 7vw;
   height: 30vh;
   width: 20vw;
+  margin-top: 4vh;
 }
 
 .chart-container {
@@ -88,7 +80,7 @@ import MonthAbnormalBarchart from './Charts/MonthAbnormal.vue'
 }
 .picture{
   height: 50vh;
-  margin-top: 20px;
+  margin-top: 1vh;
   display: flex;
   justify-content: space-around;
 }
@@ -96,4 +88,5 @@ import MonthAbnormalBarchart from './Charts/MonthAbnormal.vue'
   padding-left: 10px;
   padding-right: 30px;
 }
+
 </style>

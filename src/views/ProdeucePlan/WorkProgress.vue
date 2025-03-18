@@ -25,7 +25,7 @@ const isDataEmpty = ref(false);
 
 const config = reactive({
   data:[],
-  unit: '万元',
+  unit: '%',
 })
 
 const processData = (data) => {
@@ -80,5 +80,8 @@ margin-bottom: 0;
 }
 .chart{
   margin-left: 2vw;
+}
+:deep(.inside-column) {
+  height: 3vh !important; /* 这里改成你想要的宽度 */
 }
 </style>

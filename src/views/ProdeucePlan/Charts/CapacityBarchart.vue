@@ -139,10 +139,10 @@ onMounted(() => {
 
 h2 {
   position: absolute;
-  top: 10px;
-  left: 15px;
+  top: 0.5vh;
+  left: 1vw;
   margin: 0;
-  font-size: 16px;
+  font-size: 1vw;
   font-weight: bold;
   margin-bottom: 10px;
 }

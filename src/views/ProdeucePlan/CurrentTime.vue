@@ -9,8 +9,11 @@
 
       </dv-border-box-1>
 
-  
+      
+      <div class="logo">
         <img src="@/assets/APOLLO.png" alt="">
+      </div>
+        
       </div>
 </template>
 
@@ -48,17 +51,22 @@ onBeforeUnmount(() => {
 
 <style>
 .box1{
-  height: 120px;
-  width: 200px;
+  height: 10vh;
+  width: 10vw;
   display: flex;
 }
 .currentTime{
-  font-size: 20px;
+  font-size: 1vw;
   color: aliceblue;
 }
 img{
-  margin-left: 1vw;
-  width: 300px;
-  height: 100px;
+  margin-left: 3vw;
+  width: 13vw;
+  height: 7vh;
+}
+.logo{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
