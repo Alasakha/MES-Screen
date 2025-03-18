@@ -1,22 +1,38 @@
-// 屏幕适配工具
-// 自动根据屏幕大小设定基准分辨率
-const baseWidth = window.innerWidth >= 3840 ? 4096 : 1920;
-const baseHeight = window.innerHeight >= 2000 ? 2160 : 1080;
+// 适配 1080p、2K、4K、2160×4096
+const getBaseResolution = () => {
+  const { innerWidth: width, innerHeight: height } = window;
 
-// 获取缩放比例，修正 DPI 影响
+  if (width >= 4096 || height >= 2160) {
+      return { baseWidth: 4096, baseHeight: 2160 };  // 4K
+  } else if (width >= 2560 || height >= 1440) {
+      return { baseWidth: 2560, baseHeight: 1440 };  // 2K
+  } else if (width >= 1920 || height >= 1080) {
+      return { baseWidth: 1920, baseHeight: 1080 };  // 1080p
+  } else {
+      return { baseWidth: 1280, baseHeight: 720 };   // 最低 720p
+  }
+};
+
+// 获取 Windows 缩放比例（125%、150%、200%）
+const getSystemScale = () => {
+  return window.visualViewport?.scale || (window.outerWidth / window.innerWidth) || 1;
+};
+
+// 计算最终缩放比例
 export const getScale = () => {
-  const dpr = window.devicePixelRatio || 1; // 获取 DPI 缩放比例
+  const dpr = window.devicePixelRatio || 1;
+  const systemScale = getSystemScale();
 
-  // 获取真实的可视宽高
-  const screenWidth = window.visualViewport ? window.visualViewport.width : window.innerWidth;
-  const screenHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+  const screenWidth = window.visualViewport?.width || window.innerWidth;
+  const screenHeight = window.visualViewport?.height || window.innerHeight;
 
-  // 计算宽度和高度的缩放比例，修正 DPI 影响
-  const widthScale = (screenWidth / dpr) / baseWidth;
-  const heightScale = (screenHeight / dpr) / baseHeight;
+  const { baseWidth, baseHeight } = getBaseResolution();
 
-  // 使用较小的缩放比例，确保内容完全显示
-  return Math.min(widthScale, heightScale);
+  // 计算缩放比例，并确保 UI 不会超出屏幕
+  const widthScale = screenWidth / (baseWidth * (dpr / systemScale));
+  const heightScale = screenHeight / (baseHeight * (dpr / systemScale));
+
+  return Math.min(widthScale, heightScale, 1);
 };
 
 // 初始化缩放
@@ -25,42 +41,49 @@ export const initScale = () => {
   if (!app) return;
 
   const scale = getScale();
+  const { baseWidth, baseHeight } = getBaseResolution();
 
-  // 应用缩放
-  app.style.transform = `scale(${scale})`;
-  app.style.transformOrigin = 'center center';
+  // 计算居中偏移量，确保 **始终居中**
+  const viewportWidth = window.visualViewport?.width || window.innerWidth;
+  const viewportHeight = window.visualViewport?.height || window.innerHeight;
 
-  // 使背景全屏并适应窗口
-  app.style.width = '100vw';
-  app.style.height = '100vh';
-  app.style.backgroundSize = 'cover'; // 背景图片完全覆盖屏幕
+  const offsetX = (viewportWidth - baseWidth * scale) / 2;
+  const offsetY = (viewportHeight - baseHeight * scale) / 2;
+
+  // 应用 transform
+  app.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+  app.style.transformOrigin = 'top left'; // 以左上角为基准缩放
+  app.style.position = "absolute";
+  app.style.left = "0";
+  app.style.top = "0";
+
+  // 让 `app` 充满整个窗口
+  app.style.width = `${baseWidth}px`;
+  app.style.height = `${baseHeight}px`;
+  app.style.backgroundSize = "cover";
 };
 
-// 防抖函数
+// 防抖函数（避免窗口缩放频繁触发）
 const debounce = (fn, delay = 100) => {
   let timer = null;
-  return function (...args) {
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(() => {
-      fn.apply(this, args);
-    }, delay);
+  return (...args) => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+          fn.apply(this, args);
+      }, delay);
   };
 };
 
-// 监听窗口变化
+// 监听窗口变化，动态适配
 export const screenAdapter = () => {
-  // 使用防抖处理 resize 事件
   const debouncedResize = debounce(() => {
-    initScale();
+      initScale();
   }, 100);
 
   window.addEventListener("resize", debouncedResize);
+  window.addEventListener("load", initScale);
 
-  // 初始化
-  initScale();
-
-  // 返回清理函数
   return () => {
-    window.removeEventListener("resize", debouncedResize);
+      window.removeEventListener("resize", debouncedResize);
   };
 };
