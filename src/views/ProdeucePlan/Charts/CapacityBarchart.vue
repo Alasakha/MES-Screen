@@ -127,8 +127,8 @@ onMounted(() => {
 <style scoped>
 .box1 {
   position: relative;
-  width: 40%;
-  height: 24vw;
+  width: 35%;
+  height: 85%;
   display: flex;
   justify-content: center;
   align-items: center;

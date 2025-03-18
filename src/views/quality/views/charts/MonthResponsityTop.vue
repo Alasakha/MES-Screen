@@ -10,6 +10,9 @@
   <script setup>
   import { ref, reactive } from 'vue';
   const config = reactive({
+    waitTime:5000,
+    sort:true,
+    textColor:'#fff ',
     data: [
       {
         name: '周口',

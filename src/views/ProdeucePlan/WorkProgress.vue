@@ -5,7 +5,7 @@
   <p class="workprogress">今日工单进度</p>
 
     <div class="chart">
-      <dv-scroll-ranking-board :config="config" style="width:20vw;height:35vh" />
+      <dv-scroll-ranking-board :config="config" style="width:20vw;height:35vh" :waitTime="5000" />
     </div>
 
 </dv-border-box-1>

@@ -53,7 +53,7 @@ const drawMonthlyIndicators = (formattedData) => {
     },
     series: [
       {
-        name: 'Access From',
+        name: '本月生产异常',
         type: 'pie',
         radius: ['40%', '70%'],
         avoidLabelOverlap: false,
@@ -129,8 +129,8 @@ onMounted(() => {
 <style scoped>
 .box1 {
   position: relative;
-  width: 30vw;
-  height: 24vw;
+  width: 35%;
+  height: 85%;
   display: flex;
   justify-content: center;
   align-items: center;

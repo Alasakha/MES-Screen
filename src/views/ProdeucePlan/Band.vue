@@ -87,8 +87,13 @@ import MonthAbnormalBarchart from './Charts/MonthAbnormal.vue'
   padding: 10px;
 }
 .picture{
+  height: 50vh;
   margin-top: 20px;
   display: flex;
   justify-content: space-around;
+}
+.picture div{
+  padding-left: 10px;
+  padding-right: 30px;
 }
 </style>

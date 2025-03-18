@@ -1,5 +1,5 @@
 // src/router/index.js
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 
 // 导入你的页面组件
 import ProduceProject from '../views/ProdeucePlan/index.vue';
@@ -15,7 +15,7 @@ const routes = [
 
 // 创建路由实例
 const router = createRouter({
-  history: createWebHistory(),  // 使用浏览器的历史记录模式
+  history: createWebHashHistory(),  // 使用浏览器的历史记录模式
   routes,  // 路由数组
 });
 

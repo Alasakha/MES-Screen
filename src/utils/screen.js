@@ -1,6 +1,8 @@
 // 屏幕适配工具
-const baseWidth = 1920
-const baseHeight = 1080
+// 自动根据屏幕大小设定基准分辨率
+const baseWidth = window.innerWidth >= 3840 ? 4096 : 1920
+const baseHeight = window.innerHeight >= 2000 ? 2160 : 1080
+
 
 // 获取缩放比例
 export const getScale = () => {

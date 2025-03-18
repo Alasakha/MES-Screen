@@ -119,15 +119,15 @@ onMounted(() => {
 
 <style scoped>
 .box1 {
-  position: relative; /* 让子元素可以相对这个容器定位 */
-  width: 30vw;
-  height: 24vw;
+  position: relative;
+  width: 35%;
+  height: 85%;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 18px;
   color: aliceblue;
-  padding: 20px; /* 给内容留点边距 */
+  padding: 20px;
 }
 
 h2 {

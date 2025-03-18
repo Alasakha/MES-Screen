@@ -4,21 +4,26 @@ import { screenAdapter } from './utils/screen'
 import { eventBus } from './utils/Data/eventBus'
 
 let intervalId = null;
-// 组件挂载时初始化屏幕适配
+let removeScreenListener = null; // 用于存储 screenAdapter 返回的清理函数
+
 onMounted(() => {
-  screenAdapter()
+  // 初始化屏幕适配，并获取返回的清理函数
+  removeScreenListener = screenAdapter();
+
+  // 每 3 分钟触发一次全局刷新事件
   intervalId = setInterval(() => {
     console.log("触发全局更新事件");
-    eventBus.emit("refreshData"); // 每分钟触发一次
+    eventBus.emit("refreshData");
   }, 180000);
 })
 
-// 组件卸载时移除事件监听
 onUnmounted(() => {
-  window.removeEventListener('resize', screenAdapter)
+  // 调用 screenAdapter 返回的清理函数，正确移除监听
+  if (removeScreenListener) {
+    removeScreenListener();
+  }
   clearInterval(intervalId);
 })
-
 </script>
 
 <template>
@@ -26,7 +31,7 @@ onUnmounted(() => {
     <router-view></router-view>
   </div>
 </template>
-  
+
 <style>
 html, body {
   margin: 0;
